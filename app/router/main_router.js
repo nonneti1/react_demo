@@ -2,7 +2,8 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import HomeScreen from "../screen/HomeScreen";
-import ListScreen from "../screen/ListScreen"
+import ListScreen from "../screen/ListScreen";
+import AddTaskScreen from "../screen/ListScreen";
 
 const AppNavigator = createStackNavigator({
     Home: {
@@ -16,7 +17,13 @@ const AppNavigator = createStackNavigator({
         navigationOptions: ({ navigation }) => ({
             title: `To do list`,
           }),
-    }
+    },
+    AddTaskScreen: {
+      screen: AddTaskScreen,
+      navigationOptions: ({ navigation }) => ({
+          title: `New Task`,
+        }),
+  }
   });
   
   export default createAppContainer(AppNavigator);
