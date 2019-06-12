@@ -3,7 +3,8 @@ import { View, Text } from "react-native";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import HomeScreen from "../screen/HomeScreen";
 import ListScreen from "../screen/ListScreen";
-import AddTaskScreen from "../screen/ListScreen";
+import AddTaskScreen from "../screen/AddTaskScreen";
+import TaskViewScreen from "../screen/TaskViewScreen";
 
 const AppNavigator = createStackNavigator({
     Home: {
@@ -22,8 +23,21 @@ const AppNavigator = createStackNavigator({
       screen: AddTaskScreen,
       navigationOptions: ({ navigation }) => ({
           title: `New Task`,
-        }),
-  }
-  });
+    }),
+  },
+  TaskViewScreen: {
+    screen: TaskViewScreen,
+    navigationOptions: ({navigation}) => ({
+      title: `Task view`
+    }),
+  },
+  
+  },
+  
+  {
+    initialRouteName: "ListScreen"
+  },
+  
+  );
   
   export default createAppContainer(AppNavigator);
