@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, FlatList,Modal } from 'react-native';
 import { Input } from 'react-native-elements';
 import { Icon } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import ListItem from './ListItem';
-
+import ModalExample from './ModalExample';
 
 export default class ListScreen extends React.Component {
     static navigationOption = {
@@ -24,9 +24,15 @@ export default class ListScreen extends React.Component {
                     { id: 4, name: "Eat",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
                     { id: 5, name: "Sleep",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
                     { id: 6, name: "Dota",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
-                ]
+                ],
+                text:"",
+                modalVisible:false
             }
     }
+    handleChangeText = (TypedText) => {
+        this.setState({text: TypedText});
+    }
+
 
     TaskViewScreen() {
         this.props.navigation.navigate('TaskViewScreen')
@@ -36,12 +42,22 @@ export default class ListScreen extends React.Component {
         this.props.navigation.navigate('AddTaskScreen')
     }
 
+    ToggleModalOn=()=>{
+        this.setState({modalVisible:true})
+    }
+    ToggleModalOff=()=>{
+        this.setState({modalVisible:false})
+    }
+
+
+
     render() {
         return (
             <View style={{ backgroundColor: '#b2ffe0', flex: 1 }}>
                 <View style={styles.headerCard}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}><Input placeholder={'Add task'} /></View>
-                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}><TouchableOpacity onPress={() => this.AddTaskScreen()}>
+                    <View style={{ flexDirection: 'row', flex: 1 }}><TextInput placeholder={'Add task'} onChangeText={this.handleChangeText}/></View>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}><TouchableOpacity 
+                    onPress={()=> this.ToggleModalOn()}>
                         <Icon name='ios-add-circle' type='ionicon' color='green' />
                     </TouchableOpacity>
                     </View>
@@ -55,7 +71,12 @@ export default class ListScreen extends React.Component {
                     renderItem={({ item }) =><ListItem id={item.id} name={item.name}/>}/>
                     
                 </ScrollView>
-                
+                <Text>You type : {this.state.text}</Text>
+                <ModalExample  
+                modalVisible={this.state.modalVisible}
+                ToggleModalOff={this.ToggleModalOff}
+                name={this.state.text}
+                />
             </View>
         );
     }
