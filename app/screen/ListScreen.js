@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, FlatList,Modal } from 'react-native';
-import { Input } from 'react-native-elements';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, FlatList,Modal,ref } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import ListItem from './ListItem';
-import ModalExample from './ModalExample';
+import ModalInsert from './ModalInsert';
+import ModalEdit from './ModalEdit';
+
 
 export default class ListScreen extends React.Component {
     static navigationOption = {
@@ -19,20 +20,37 @@ export default class ListScreen extends React.Component {
             {
                 list_todo: [
                     { id: 1, name: "Eat",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
-                    { id: 2, name: "Sleep",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
-                    { id: 3, name: "Dota",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
-                    { id: 4, name: "Eat",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
-                    { id: 5, name: "Sleep",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
-                    { id: 6, name: "Dota",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
+                    
                 ],
-                text:"",
-                modalVisible:false
+                refresherPage:false,
+                tempText:null,
+                modalVisibleAdd:false,
+                modalVisibleEdit:false,
             }
     }
     handleChangeText = (TypedText) => {
-        this.setState({text: TypedText});
+        
+        this.setState({tempText: TypedText});
+        
     }
 
+    temporaryObject = () =>{
+        tempObject = {name: this.state.tempText}
+        this.setState({
+            list_todo: [...this.state.list_todo,tempObject],
+        })
+        this.ToggleModalAddOff();
+        this.setState({tempText:''});
+    }
+
+    deleteByIndex=(index)=>{
+        this.setState(()=>{
+            this.state.list_todo.splice(index,1);
+        })
+        this.setState({
+            refresherPage:!this.state.refresherPage
+        })
+    }
 
     TaskViewScreen() {
         this.props.navigation.navigate('TaskViewScreen')
@@ -42,22 +60,32 @@ export default class ListScreen extends React.Component {
         this.props.navigation.navigate('AddTaskScreen')
     }
 
-    ToggleModalOn=()=>{
-        this.setState({modalVisible:true})
+    ToggleModalAddOn=()=>{
+        this.setState({modalVisibleAdd:true})
+        this.FirstInput.clear();
+        
     }
-    ToggleModalOff=()=>{
-        this.setState({modalVisible:false})
+    ToggleModalAddOff=()=>{
+        this.setState({modalVisibleAdd:false})
+    }
+    ToggleModalEditOn=()=>{
+        this.setState({modalVisibleEdit:true})
+    }
+    ToggleModalEditOff=()=>{
+        this.setState({modalVisibleEdit:false})
     }
 
-
+    keyExtractor=(item,index)=>{
+        return index.toString();
+    }
 
     render() {
         return (
             <View style={{ backgroundColor: '#b2ffe0', flex: 1 }}>
                 <View style={styles.headerCard}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}><TextInput placeholder={'Add task'} onChangeText={this.handleChangeText}/></View>
+                    <View style={{ flexDirection: 'row', flex: 1 }}><TextInput placeholder={'Add task'} onChangeText={this.handleChangeText} ref={(ref) => { this.FirstInput = ref; }}/></View>
                     <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}><TouchableOpacity 
-                    onPress={()=> this.ToggleModalOn()}>
+                    onPress={()=> this.ToggleModalAddOn()}>
                         <Icon name='ios-add-circle' type='ionicon' color='green' />
                     </TouchableOpacity>
                     </View>
@@ -67,15 +95,26 @@ export default class ListScreen extends React.Component {
                 </View>
                 <ScrollView>
                     <FlatList
+                    extraData={this.state.refresherPage}
                     data={this.state.list_todo}
-                    renderItem={({ item }) =><ListItem id={item.id} name={item.name}/>}/>
+                    keyExtractor={this.keyExtractor}
+                    renderItem={({ item,index }) =><ListItem id={item.id} name={item.name} index={index} deleteByIndex={this.deleteByIndex} ToggleModalEditOn={this.ToggleModalEditOn} />}/>
                     
                 </ScrollView>
                 <Text>You type : {this.state.text}</Text>
-                <ModalExample  
-                modalVisible={this.state.modalVisible}
-                ToggleModalOff={this.ToggleModalOff}
-                name={this.state.text}
+                <ModalInsert  
+                extraData =  {this.state}
+                modalVisibleAdd={this.state.modalVisibleAdd}
+                ToggleModalAddOff={this.ToggleModalAddOff}
+                name={this.state.tempText}
+                temporaryObject={this.temporaryObject}
+                />
+                <ModalEdit
+                extraData =  {this.state}
+                modalVisibleEdit={this.state.modalVisibleEdit}
+                ToggleModalEditOff={this.ToggleModalEditOff}
+                name={this.state.tempText}
+                temporaryObject={this.temporaryObject}
                 />
             </View>
         );

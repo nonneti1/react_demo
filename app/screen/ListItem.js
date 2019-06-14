@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity,Button, Alert, FlatList } from 'react-native';
 import { Input } from 'react-native-elements';
 import { Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -13,7 +13,7 @@ export default class ListItem extends Component {
             'Delete task',
             'Are you sure?',
             [
-                { text: 'OK', onPress: this.onDeleteBTN },
+                { text: 'OK', onPress:()=> this.props.deleteByIndex(this.props.index) },
                 { text: 'Cancel', onPress: () => console.log('Cancel Pressed!') },
             ],
             { cancelable: false }
@@ -31,12 +31,12 @@ export default class ListItem extends Component {
                 </View>
                 <View style={{ flexDirection: 'row', flex: 3, paddingLeft: 5 }}>
                     <Text>
-                        {this.props.taskDetail}
+                        Detail
                     </Text>
                 </View>
                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', paddingRight: 15, paddingBottom: 10, }}>
                     <View style={{ flexDirection: 'row', paddingRight: 20, }}><TouchableOpacity onPress={this.confirmDelete}><Icon name='ios-trash' type='ionicon' color='red' /></TouchableOpacity></View>
-                    <TouchableOpacity><Icon name='ios-folder' type='ionicon' /></TouchableOpacity>
+                    <TouchableOpacity onPress={this.props.ToggleModalEditOn}><Icon name='ios-folder' type='ionicon' /></TouchableOpacity>
                 </View>
             </View>
         );

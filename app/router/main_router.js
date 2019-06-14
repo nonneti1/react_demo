@@ -5,7 +5,7 @@ import HomeScreen from "../screen/HomeScreen";
 import ListScreen from "../screen/ListScreen";
 import AddTaskScreen from "../screen/AddTaskScreen";
 import TaskViewScreen from "../screen/TaskViewScreen";
-import ModalExample from "../screen/ModalExample";
+import ModalInsert from "../screen/ModalInsert";
 
 const AppNavigator = createStackNavigator({
     Home: {
@@ -32,10 +32,10 @@ const AppNavigator = createStackNavigator({
       title: `Task view`
     }),
   },
-  ModalExample:{
-    screen: ModalExample,
+  ModalInsert:{
+    screen: ModalInsert,
     navigationOptions: ({navigation}) => ({
-      title: `Modal Example`
+      title: `ModalInsert`
     })
   }
   
