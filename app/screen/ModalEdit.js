@@ -18,14 +18,14 @@ export default class ModalInsert extends Component {
 
                     <View style={{ backgroundColor: '#b2ffe0', flex: 1 }}>
                         <View style={styles.headerCard}>
-                            <TextInput placeholder={'Task name here'} value={this.props.name}/>
+                            <TextInput placeholder={'Task name here'} defaultValue={this.props.name} onChangeText={(text)=>this.props.handleEditText(text)}/>
                         </View>
                         <View style={styles.whiteBox}>
                             <Text>Date : </Text>
                         </View>
                     </View>
 
-                    <TouchableOpacity onPress={this.props.temporaryObject}>
+                    <TouchableOpacity onPress={()=>this.props.ConfirmEdit(this.props.tempIndex)}>
                         <View style={{backgroundColor:'#60f92c',flexDirection:'row',alignItems:'center',justifyContent:'center',}}>
                         <Text style={{color:'#ffff',fontSize:30}}>Edit</Text>
                         </View>

@@ -31,12 +31,12 @@ export default class ListItem extends Component {
                 </View>
                 <View style={{ flexDirection: 'row', flex: 3, paddingLeft: 5 }}>
                     <Text>
-                        Detail
+                        {this.props.index}
                     </Text>
                 </View>
                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', paddingRight: 15, paddingBottom: 10, }}>
                     <View style={{ flexDirection: 'row', paddingRight: 20, }}><TouchableOpacity onPress={this.confirmDelete}><Icon name='ios-trash' type='ionicon' color='red' /></TouchableOpacity></View>
-                    <TouchableOpacity onPress={this.props.ToggleModalEditOn}><Icon name='ios-folder' type='ionicon' /></TouchableOpacity>
+                    <TouchableOpacity onPress={()=>this.props.ToggleModalEditOn(this.props.index)}><Icon name='ios-folder' type='ionicon' /></TouchableOpacity>
                 </View>
             </View>
         );

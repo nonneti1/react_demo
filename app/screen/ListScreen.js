@@ -22,6 +22,8 @@ export default class ListScreen extends React.Component {
                     { id: 1, name: "Eat",detail: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eget ex leo. Vestibulum cursus viverra nunc ac facilisis. Nulla ut bibendum quam. Pellentesque a sodales ante." },
                     
                 ],
+                tempEditText:"",
+                tempIndex:null,
                 refresherPage:false,
                 tempText:null,
                 modalVisibleAdd:false,
@@ -32,6 +34,9 @@ export default class ListScreen extends React.Component {
         
         this.setState({tempText: TypedText});
         
+    }
+    handleEditText = (TypedText) => {
+        this.setState({tempEditText: TypedText})
     }
 
     temporaryObject = () =>{
@@ -68,8 +73,10 @@ export default class ListScreen extends React.Component {
     ToggleModalAddOff=()=>{
         this.setState({modalVisibleAdd:false})
     }
-    ToggleModalEditOn=()=>{
+    ToggleModalEditOn=(index)=>{
         this.setState({modalVisibleEdit:true})
+        this.setState({tempIndex:index})
+        this.setState({tempEditText:this.state.list_todo[index].name})
     }
     ToggleModalEditOff=()=>{
         this.setState({modalVisibleEdit:false})
@@ -78,6 +85,20 @@ export default class ListScreen extends React.Component {
     keyExtractor=(item,index)=>{
         return index.toString();
     }
+
+    ConfirmEdit= (index)=>{
+        this.setState(()=>{
+            list_todo = this.state.list_todo
+            list_todo[index].name = this.state.tempEditText
+                return{
+                    list_todo,
+                }
+        })
+        this.setState({refresherPage:!this.state.refresherPage})
+        console.log(this.state.list_todo,this.state.tempEditText)
+        this.ToggleModalEditOff();
+    }
+
 
     render() {
         return (
@@ -101,7 +122,6 @@ export default class ListScreen extends React.Component {
                     renderItem={({ item,index }) =><ListItem id={item.id} name={item.name} index={index} deleteByIndex={this.deleteByIndex} ToggleModalEditOn={this.ToggleModalEditOn} />}/>
                     
                 </ScrollView>
-                <Text>You type : {this.state.text}</Text>
                 <ModalInsert  
                 extraData =  {this.state}
                 modalVisibleAdd={this.state.modalVisibleAdd}
@@ -111,10 +131,13 @@ export default class ListScreen extends React.Component {
                 />
                 <ModalEdit
                 extraData =  {this.state}
+                ConfirmEdit={this.ConfirmEdit}
                 modalVisibleEdit={this.state.modalVisibleEdit}
                 ToggleModalEditOff={this.ToggleModalEditOff}
-                name={this.state.tempText}
-                temporaryObject={this.temporaryObject}
+                name={this.state.tempEditText}
+                tempEditText={this.state.tempEditText}
+                handleEditText={this.handleEditText}
+                tempIndex={this.state.tempIndex}
                 />
             </View>
         );
